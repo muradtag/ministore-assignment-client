@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { gql, useQuery } from "@apollo/client";
+// import { gql, useQuery } from "@apollo/client";
 
 // const GET_CURRENCIES = gql`
 // 	query GetCurrencies {
