@@ -6,12 +6,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faChevronDown,
 	faCartShopping,
+	faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
+import CurrencySwitcher from "./CurrencySwitcher";
+import { useState } from "react";
 
 function Header(props) {
 	const { loading, error, data } = useQuery(GET_CATEGORY_NAMES);
+	const [currencyOpen, setCurrencyOpen] = useState(true);
+	const [cartOpen, setCartOpen] = useState(false);
+
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error Loading category names.</div>;
+
+	const handleClick = (event) => {
+		if (event.currentTarget.classList.contains("cart")) {
+			setCurrencyOpen(false);
+			setCartOpen(!cartOpen);
+		} else {
+			setCurrencyOpen(!currencyOpen);
+			setCartOpen(false);
+		}
+	};
 
 	return (
 		<StyledHeader>
@@ -27,17 +43,32 @@ function Header(props) {
 					</CategoryBtn>
 				))}
 			</Categories>
+
 			<Logo>
 				<img src="images/logo.png" style={{ width: "2rem" }} alt="logo" />
 			</Logo>
-			<div className="options" style={{ float: "right" }}>
-				<OptionBtn>
+
+			<div className="options" style={{ float: "right", position: "relative" }}>
+				<OptionBtn className="cart" onClick={handleClick}>
 					<FontAwesomeIcon icon={faCartShopping} size="lg" />
 				</OptionBtn>
-				<OptionBtn>
+
+				<OptionBtn className="currency" onClick={handleClick}>
 					{props.currency.currency + " "}
-					<FontAwesomeIcon icon={faChevronDown} size="xs" />
+					{!currencyOpen ? (
+						<FontAwesomeIcon icon={faChevronDown} size="xs" />
+					) : (
+						<FontAwesomeIcon icon={faChevronUp} size="xs" />
+					)}
 				</OptionBtn>
+
+				{currencyOpen && (
+					<CurrencySwitcher
+						currency={props.currency}
+						onChoose={() => setCurrencyOpen(false)}
+					/>
+				)}
+				{/* {cartOpen && <CurrencySwitcher />} */}
 			</div>
 		</StyledHeader>
 	);
