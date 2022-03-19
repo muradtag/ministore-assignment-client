@@ -10,11 +10,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CurrencySwitcher from "./CurrencySwitcher";
 import { useState } from "react";
+import CartOverlay from "./CartOverlay";
 
 function Header(props) {
 	const { loading, error, data } = useQuery(GET_CATEGORY_NAMES);
 	const [currencyOpen, setCurrencyOpen] = useState(false);
-	const [cartOpen, setCartOpen] = useState(false);
+	const [cartOpen, setCartOpen] = useState(true);
 
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error Loading category names.</div>;
@@ -67,24 +68,29 @@ function Header(props) {
 						onChoose={() => setCurrencyOpen(false)}
 					/>
 				)}
-				{/* TODO: {cartOpen && <CartOverlay />} */}
 			</Options>
+			{cartOpen && <CartOverlay />}
 		</StyledHeader>
 	);
 }
 
 const StyledHeader = styled.header`
+	position: fixed;
 	display: flex;
 	box-sizing: content-box;
-	margin-top: 10px;
 	justify-content: space-between;
 	padding-left: 3vw;
 	padding-right: 3vw;
+	background-color: white;
+	z-index: 5;
+	top: 0;
+	left: 0;
+	right: 0;
 	@media (max-width: 500px) {
-		margin-top: 50px;
+		padding-top: 50px;
 	}
 	@media (max-width: 335px) {
-		margin-top: 50px;
+		padding-top: 50px;
 		flex-direction: column;
 	}
 `;
@@ -107,7 +113,7 @@ const Categories = styled.div`
 const Logo = styled.div`
 	display: inline-block;
 	margin: 0 auto;
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	top: 20px;
 	@media (max-width: 500px) {

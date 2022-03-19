@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "./Components/Header";
 import Category from "./Components/Category";
 import Product from "./Components/PDP";
+import styled from "styled-components";
 
 function App() {
 	const [currency, setCurrency] = useState("$");
@@ -12,10 +13,22 @@ function App() {
 				currency={{ currency, setCurrency }}
 				category={{ category, setCategory }}
 			/>
-			{/* <Category title={category} currency={currency} /> */}
+			<Container>
+				<Category title={category} currency={currency} />
+			</Container>
 			<Product currency={currency} />
 		</>
 	);
 }
+
+const Container = styled.div`
+	margin-top: 71px;
+	@media (max-width: 500px) {
+		margin-top: 111px;
+	}
+	@media (max-width: 335px) {
+		margin-top: 151px;
+	}
+`;
 
 export default App;

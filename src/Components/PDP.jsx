@@ -209,8 +209,10 @@ const Price = styled.div`
 	margin-bottom: 30px;
 `;
 
-const AddButton = styled.div`
+const AddButton = styled.button`
 	background-color: #5ece7b;
+	font-size: 1.1rem;
+	font-family: "Raleway", sans-serif;
 	color: white;
 	border: 0;
 	display: flex;
@@ -226,6 +228,8 @@ const AddButton = styled.div`
 `;
 
 const Description = styled.div`
+	font-family: "Roboto", sans-serif;
+	font-weight: normal;
 	margin-top: 30px;
 `;
 
