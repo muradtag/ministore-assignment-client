@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "./Components/Header";
+import Category from "./Components/Category";
 
 function App() {
 	const [currency, setCurrency] = useState("$");
@@ -10,6 +11,7 @@ function App() {
 				currency={{ currency, setCurrency }}
 				category={{ category, setCategory }}
 			/>
+			<Category title={category} currency={currency} />
 		</>
 	);
 }

@@ -13,7 +13,7 @@ import { useState } from "react";
 
 function Header(props) {
 	const { loading, error, data } = useQuery(GET_CATEGORY_NAMES);
-	const [currencyOpen, setCurrencyOpen] = useState(true);
+	const [currencyOpen, setCurrencyOpen] = useState(false);
 	const [cartOpen, setCartOpen] = useState(false);
 
 	if (loading) return <div>Loading...</div>;
@@ -43,16 +43,10 @@ function Header(props) {
 					</CategoryBtn>
 				))}
 			</Categories>
-
 			<Logo>
 				<img src="images/logo.png" style={{ width: "2rem" }} alt="logo" />
 			</Logo>
-
-			<div className="options" style={{ float: "right", position: "relative" }}>
-				<OptionBtn className="cart" onClick={handleClick}>
-					<FontAwesomeIcon icon={faCartShopping} size="lg" />
-				</OptionBtn>
-
+			<Options>
 				<OptionBtn className="currency" onClick={handleClick}>
 					{props.currency.currency + " "}
 					{!currencyOpen ? (
@@ -62,14 +56,18 @@ function Header(props) {
 					)}
 				</OptionBtn>
 
+				<OptionBtn noOfItems={1} className="cart" onClick={handleClick}>
+					<FontAwesomeIcon icon={faCartShopping} size="lg" />
+				</OptionBtn>
+
 				{currencyOpen && (
 					<CurrencySwitcher
 						currency={props.currency}
 						onChoose={() => setCurrencyOpen(false)}
 					/>
 				)}
-				{/* {cartOpen && <CurrencySwitcher />} */}
-			</div>
+				{/* {cartOpen && <CartOverlay />} */}
+			</Options>
 		</StyledHeader>
 	);
 }
@@ -77,7 +75,7 @@ function Header(props) {
 const StyledHeader = styled.header`
 	display: flex;
 	box-sizing: content-box;
-	margin-top: 20px;
+	margin-top: 10px;
 	justify-content: space-between;
 	padding-left: 3vw;
 	padding-right: 3vw;
@@ -92,9 +90,9 @@ const StyledHeader = styled.header`
 
 const CategoryBtn = styled(Link)`
 	display: inline-block;
-	padding: 10px;
+	padding: 20px 10px;
 	border-bottom: ${(props) => (props.$active ? "2px solid #57e582" : "0")};
-	color: ${(props) => (props.$active ? "#57e582" : "#888")};
+	color: ${(props) => (props.$active ? "#57e582" : "#555")};
 	text-decoration: none;
 	&:hover {
 		border-bottom: 2px solid #57e582;
@@ -110,23 +108,50 @@ const Logo = styled.div`
 	margin: 0 auto;
 	position: absolute;
 	left: 50%;
+	top: 20px;
 	@media (max-width: 500px) {
 		top: 2%;
 	}
 `;
 
+const Options = styled.div`
+	float: right;
+	position: relative;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+`;
+
 const OptionBtn = styled.button`
+	position: relative;
 	padding: 10px;
 	border: 0;
+	color: #555;
 	background-color: white;
 	text-decoration: none;
-	margin-right: 10px;
 	font-size: 1rem;
 	float: right;
 	border-radius: 5px;
 	cursor: pointer;
 	&:hover {
 		background-color: #ededed;
+	}
+	&::after {
+		content: "${(props) => props.noOfItems}";
+		visibility: ${(props) => (props.noOfItems ? "visible" : "hidden")};
+		position: absolute;
+		right: -2px;
+		top: -5px;
+		border-radius: 50%;
+		border: 1px solid white;
+		font-size: 0.6rem;
+		color: white;
+		width: 1.4rem;
+		height: 1.4rem;
+		background-color: #555;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 `;
 
