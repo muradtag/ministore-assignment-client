@@ -56,6 +56,9 @@ const Container = styled.div`
 	&:hover {
 		box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
 	}
+	&:hover button {
+		visibility: visible;
+	}
 	&::before {
 		content: "OUT OF STOCK";
 		visibility: ${(props) => (props.$inStock ? "hidden" : "visible")};
@@ -82,6 +85,7 @@ const Price = styled.h4``;
 const AddButton = styled.button`
 	background-color: #57e582;
 	position: absolute;
+	visibility: hidden;
 	width: 50px;
 	height: 50px;
 	border: 0;

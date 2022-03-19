@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "./Components/Header";
 import Category from "./Components/Category";
+import Product from "./Components/PDP";
 
 function App() {
 	const [currency, setCurrency] = useState("$");
@@ -11,7 +12,8 @@ function App() {
 				currency={{ currency, setCurrency }}
 				category={{ category, setCategory }}
 			/>
-			<Category title={category} currency={currency} />
+			{/* <Category title={category} currency={currency} /> */}
+			<Product currency={currency} />
 		</>
 	);
 }

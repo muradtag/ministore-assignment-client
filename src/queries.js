@@ -28,7 +28,7 @@ export const GET_CATEGORY = gql`
 `;
 
 export const GET_PRODUCT_CARD = gql`
-	query GetProduct($id: String!) {
+	query GetProductCard($id: String!) {
 		product(id: $id) {
 			name
 			id
@@ -41,6 +41,37 @@ export const GET_PRODUCT_CARD = gql`
 					symbol
 				}
 			}
+		}
+	}
+`;
+
+export const GET_PRODUCT = gql`
+	query GetProduct($id: String!) {
+		product(id: $id) {
+			id
+			name
+			inStock
+			gallery
+			description
+			category
+			attributes {
+				id
+				name
+				type
+				items {
+					displayValue
+					value
+					id
+				}
+			}
+			prices {
+				currency {
+					label
+					symbol
+				}
+				amount
+			}
+			brand
 		}
 	}
 `;
