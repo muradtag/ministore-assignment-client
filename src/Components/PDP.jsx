@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HTMLReactParser from "html-react-parser";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { GET_PRODUCT } from "../queries";
 
-function Product({ currency }) {
+function Product({ currency, addItemToCart }) {
 	let params = useParams();
 
 	const { loading, error, data } = useQuery(GET_PRODUCT, {
@@ -13,7 +15,43 @@ function Product({ currency }) {
 	});
 
 	const [imageOpen, setImage] = useState("");
-	const [item, setItem] = useState({});
+	const [popup, setPopup] = useState(false);
+	const [product, setProduct] = useState({
+		productId: "",
+		quantity: 1,
+		attributes: {},
+	});
+
+	useEffect(() => {
+		if (!loading) {
+			let attributes = {};
+			for (let att of data.product.attributes) {
+				attributes = {
+					...attributes,
+					[att.id]: att.items[0].id,
+				};
+			}
+			setProduct({ productId: data.product.id, quantity: 1, attributes });
+		}
+	}, [loading, data]);
+
+	let changeValue = (id, value) => {
+		setProduct({
+			...product,
+			attributes: {
+				...product.attributes,
+				[id]: value,
+			},
+		});
+	};
+
+	let handleAddItem = () => {
+		addItemToCart(product);
+		setPopup(true);
+		setTimeout(() => {
+			setPopup(false);
+		}, 1000);
+	};
 
 	if (loading) return <Container>Loading...</Container>;
 	if (error) return <Container>Error PDP</Container>;
@@ -58,19 +96,25 @@ function Product({ currency }) {
 					<Attribute key={att.id}>
 						<h4>{att.name.toUpperCase()}:</h4>
 						<Options>
-							{att.items.map((item) =>
-								att.type === "text" ? (
-									<Option key={item.id} color="white" $active={true}>
+							{att.items.map((item, index) => {
+								return att.type === "text" ? (
+									<Option
+										key={item.id}
+										color="white"
+										$active={item.id === product.attributes[att.id]}
+										onClick={() => changeValue(att.id, item.id)}
+									>
 										{item.value}
 									</Option>
 								) : (
 									<Option
 										key={item.id}
 										color={item.value}
-										$active={true}
+										$active={item.id === product.attributes[att.id]}
+										onClick={() => changeValue(att.id, item.id)}
 									></Option>
-								)
-							)}
+								);
+							})}
 						</Options>
 					</Attribute>
 				))}
@@ -85,7 +129,14 @@ function Product({ currency }) {
 						).amount
 					}`}</h2>
 				</Price>
-				<AddButton>ADD TO CART</AddButton>
+				<div style={{ position: "relative" }}>
+					<AddButton onClick={handleAddItem}>ADD TO CART</AddButton>
+					<Popup $visible={popup}>
+						<FontAwesomeIcon style={{ padding: "10px" }} icon={faCheckCircle} />{" "}
+						Added to Cart
+					</Popup>
+				</div>
+
 				<Description>{HTMLReactParser(data.product.description)}</Description>
 			</Data>
 		</Container>
@@ -234,6 +285,7 @@ const AddButton = styled.button`
 	color: white;
 	border: 0;
 	display: flex;
+	position: relative;
 	flex-direction: column;
 	align-items: center;
 	cursor: pointer;
@@ -249,6 +301,25 @@ const Description = styled.div`
 	font-family: "Roboto", sans-serif;
 	font-weight: normal;
 	margin-top: 30px;
+`;
+
+const Popup = styled.div`
+	/* padding: 16px 32px; */
+	margin-top: 10px;
+	position: absolute;
+	top: 40px;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 292px;
+	overflow: hidden;
+	height: ${(props) => (props.$visible ? "52px" : "0")};
+	border: 2px solid #5ece7b;
+	z-index: 6;
+	background-color: white;
+	font-size: 1.1rem;
+	transition: all 0.5s ease-in-out;
 `;
 
 export default Product;

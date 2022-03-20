@@ -57,8 +57,11 @@ function Header(props) {
 					)}
 				</OptionBtn>
 
-				{/* TODO: add no of carts items */}
-				<OptionBtn noOfItems={1} className="cart" onClick={handleClick}>
+				<OptionBtn
+					noOfItems={props.cart.cart.length}
+					className="cart"
+					onClick={handleClick}
+				>
 					<FontAwesomeIcon icon={faCartShopping} size="lg" />
 				</OptionBtn>
 
@@ -71,6 +74,7 @@ function Header(props) {
 			</Options>
 			{cartOpen && (
 				<CartOverlay
+					cart={props.cart}
 					setCartOpen={setCartOpen}
 					currency={props.currency.currency}
 				/>
