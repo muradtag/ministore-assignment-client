@@ -3,6 +3,7 @@ import Header from "./Components/Header";
 import Category from "./Components/Category";
 import Product from "./Components/PDP";
 import styled from "styled-components";
+import Cart from "./Components/Cart";
 
 function App() {
 	const [currency, setCurrency] = useState("$");
@@ -15,8 +16,9 @@ function App() {
 			/>
 			<Container>
 				<Category title={category} currency={currency} />
+				<Product currency={currency} />
+				<Cart currency={currency} />
 			</Container>
-			<Product currency={currency} />
 		</>
 	);
 }

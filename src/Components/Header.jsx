@@ -69,7 +69,7 @@ function Header(props) {
 					/>
 				)}
 			</Options>
-			{cartOpen && <CartOverlay />}
+			{cartOpen && <CartOverlay currency={props.currency.currency} />}
 		</StyledHeader>
 	);
 }

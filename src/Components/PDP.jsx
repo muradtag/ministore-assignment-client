@@ -10,6 +10,7 @@ function Product({ currency }) {
 		variables: { id: "xbox-series-s" },
 	});
 	const [imageOpen, setImage] = useState("");
+	const [item, setItem] = useState({});
 
 	if (loading) return <Container>Loading...</Container>;
 	if (error) return <Container>Error PDP</Container>;
@@ -56,11 +57,15 @@ function Product({ currency }) {
 						<Options>
 							{att.items.map((item) =>
 								att.type === "text" ? (
-									<Option key={item.id} color="white">
+									<Option key={item.id} color="white" $active={true}>
 										{item.value}
 									</Option>
 								) : (
-									<Option key={item.id} color={item.value}></Option>
+									<Option
+										key={item.id}
+										color={item.value}
+										$active={true}
+									></Option>
 								)
 							)}
 						</Options>
@@ -166,7 +171,6 @@ const Data = styled.div`
 	@media (max-width: 1000px) {
 		margin-left: 10px;
 	}
-	/* background-color: #f2f2f2; */
 `;
 
 const Name = styled.h1`
@@ -193,13 +197,24 @@ const Option = styled.div`
 	height: 45px;
 	cursor: pointer;
 	width: 63px;
-	border: 2px solid #888;
+	border: 2px solid black;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	margin: 5px;
-	background-color: ${(props) => props.color};
+	color: ${(props) => (props.$active ? "white" : "black")};
+	background-color: ${(props) => {
+		return props.color === "white"
+			? props.$active
+				? "black"
+				: "white"
+			: props.color;
+	}};
 	font-size: 1rem;
+	opacity: ${(props) => (props.$active ? "1" : "0.5")};
+	&:hover {
+		opacity: 1;
+	}
 `;
 
 const Price = styled.div`

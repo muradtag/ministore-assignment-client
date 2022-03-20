@@ -1,14 +1,22 @@
 import styled from "styled-components";
+import CartItem from "./CartItem";
+
 function CartOverlay(props) {
 	return (
 		<Background>
 			<Overlay>
 				<Title>
-					<p>
+					<span>
 						<strong>My Bag,</strong> 2 items
-					</p>
+					</span>
 				</Title>
-				{/* Overlay Item */}
+
+				<Items>
+					<CartItem currency={props.currency} overlay={true} />
+					<CartItem currency={props.currency} overlay={true} />
+					<CartItem currency={props.currency} overlay={true} />
+				</Items>
+
 				<Title>
 					<strong>Total</strong>
 					<strong>$ 100.00</strong>
@@ -43,7 +51,8 @@ const Overlay = styled.div`
 	position: absolute;
 	padding: 10px;
 	right: 30px;
-	width: 300px;
+	max-width: 400px;
+	margin-left: 30px;
 	background-color: white;
 `;
 
@@ -53,10 +62,26 @@ const Title = styled.p`
 	justify-content: space-between;
 `;
 
+const Items = styled.div`
+	max-height: 50vh;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	&::-webkit-scrollbar {
+		width: 5px;
+	}
+	&::-webkit-scrollbar-track {
+		background-color: #f1f1f1;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: #888;
+	}
+`;
+
 const Buttons = styled.div`
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
 `;
 
 const Button = styled.button`
@@ -71,6 +96,13 @@ const Button = styled.button`
 	align-items: center;
 	cursor: pointer;
 	padding: 10px 30px;
+	@media (max-width: 375px) {
+		width: 100%;
+	}
+	&:hover {
+		background-color: ${(props) =>
+			props.color === "white" ? "lightgrey" : "green"};
+	}
 `;
 
 export default CartOverlay;

@@ -11,8 +11,6 @@ function Category({ title, currency }) {
 	if (loading) return <Container>Loading...</Container>;
 	if (error) return <Container>Error Loading Products</Container>;
 
-	console.log(data.category.products);
-
 	return (
 		<Container>
 			<Title>{title.charAt(0).toUpperCase() + title.slice(1)}</Title>

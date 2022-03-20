@@ -15,11 +15,7 @@ function ProductCard({ id, currency }) {
 	const handleOpenProduct = () => {
 		// TODO
 	};
-	const handleAddProduct = () => {
-		// TODO
-	};
 
-	console.log(data);
 	return (
 		<Container onClick={handleOpenProduct} $inStock={data.product.inStock}>
 			<img
@@ -37,7 +33,7 @@ function ProductCard({ id, currency }) {
 					}`}
 				</Price>
 			</div>
-			<AddButton onClick={handleAddProduct}>
+			<AddButton>
 				<FontAwesomeIcon icon={faCartPlus} size="2x" color="white" />
 			</AddButton>
 		</Container>
