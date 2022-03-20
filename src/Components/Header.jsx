@@ -15,7 +15,7 @@ import CartOverlay from "./CartOverlay";
 function Header(props) {
 	const { loading, error, data } = useQuery(GET_CATEGORY_NAMES);
 	const [currencyOpen, setCurrencyOpen] = useState(false);
-	const [cartOpen, setCartOpen] = useState(true);
+	const [cartOpen, setCartOpen] = useState(false);
 
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error Loading category names.</div>;
@@ -69,7 +69,12 @@ function Header(props) {
 					/>
 				)}
 			</Options>
-			{cartOpen && <CartOverlay currency={props.currency.currency} />}
+			{cartOpen && (
+				<CartOverlay
+					setCartOpen={setCartOpen}
+					currency={props.currency.currency}
+				/>
+			)}
 		</StyledHeader>
 	);
 }

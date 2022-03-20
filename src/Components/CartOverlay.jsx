@@ -1,9 +1,12 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CartItem from "./CartItem";
 
 function CartOverlay(props) {
 	return (
-		<Background>
+		<Background
+			onClick={(e) => e.target === e.currentTarget && props.setCartOpen(false)}
+		>
 			<Overlay>
 				<Title>
 					<span>
@@ -22,8 +25,16 @@ function CartOverlay(props) {
 					<strong>$ 100.00</strong>
 				</Title>
 				<Buttons>
-					<Button color="white">VIEW BAG</Button>
-					<Button color="#5ece7b">CHECKOUT</Button>
+					<Button
+						to="/cart"
+						color="white"
+						onClick={() => props.setCartOpen(false)}
+					>
+						VIEW BAG
+					</Button>
+					<Button to="/checkout" color="#5ece7b">
+						CHECKOUT
+					</Button>
 				</Buttons>
 			</Overlay>
 		</Background>
@@ -84,7 +95,7 @@ const Buttons = styled.div`
 	flex-wrap: wrap;
 `;
 
-const Button = styled.button`
+const Button = styled(Link)`
 	background-color: ${(props) => props.color};
 	font-size: 0.8rem;
 	font-family: "Raleway", sans-serif;
@@ -96,6 +107,7 @@ const Button = styled.button`
 	align-items: center;
 	cursor: pointer;
 	padding: 10px 30px;
+	text-decoration: none;
 	@media (max-width: 375px) {
 		width: 100%;
 	}

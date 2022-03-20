@@ -4,10 +4,12 @@ import Category from "./Components/Category";
 import Product from "./Components/PDP";
 import styled from "styled-components";
 import Cart from "./Components/Cart";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
 	const [currency, setCurrency] = useState("$");
 	const [category, setCategory] = useState("all");
+
 	return (
 		<>
 			<Header
@@ -15,9 +17,17 @@ function App() {
 				category={{ category, setCategory }}
 			/>
 			<Container>
-				<Category title={category} currency={currency} />
-				<Product currency={currency} />
-				<Cart currency={currency} />
+				<Routes>
+					<Route
+						path={`/`}
+						element={<Category title={category} currency={currency} />}
+					/>
+					<Route
+						path={`/:productId`}
+						element={<Product currency={currency} />}
+					/>
+					<Route path={`/cart`} element={<Cart currency={currency} />} />
+				</Routes>
 			</Container>
 		</>
 	);

@@ -1,14 +1,17 @@
 import { useQuery } from "@apollo/client";
 import HTMLReactParser from "html-react-parser";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { GET_PRODUCT } from "../queries";
 
 function Product({ currency }) {
+	let params = useParams();
+
 	const { loading, error, data } = useQuery(GET_PRODUCT, {
-		// variables: { id: "jacket-canada-goosee" },
-		variables: { id: "xbox-series-s" },
+		variables: { id: params.productId },
 	});
+
 	const [imageOpen, setImage] = useState("");
 	const [item, setItem] = useState({});
 

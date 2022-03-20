@@ -3,17 +3,19 @@ import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { GET_PRODUCT_CARD } from "../queries";
+import { useNavigate } from "react-router-dom";
 
 function ProductCard({ id, currency }) {
 	const { loading, error, data } = useQuery(GET_PRODUCT_CARD, {
 		variables: { id },
 	});
+	let navigate = useNavigate();
 
 	if (loading) return <Container>Loading...</Container>;
 	if (error) return <Container>Error Loading Product.</Container>;
 
 	const handleOpenProduct = () => {
-		// TODO
+		navigate(`/${id}`);
 	};
 
 	return (
