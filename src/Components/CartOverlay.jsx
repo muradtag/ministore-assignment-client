@@ -1,35 +1,53 @@
+// import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CartItem from "./CartItem";
 
-function CartOverlay(props) {
+function CartOverlay({ cart, setCartOpen, currency }) {
+	// const [total, setTotal] = useState(0);
+
 	return (
 		<Background
-			onClick={(e) => e.target === e.currentTarget && props.setCartOpen(false)}
+			onClick={(e) => e.target === e.currentTarget && setCartOpen(false)}
 		>
 			<Overlay>
 				<Title>
 					<span>
-						<strong>My Bag,</strong> 2 items
+						<strong>My Bag,</strong>{" "}
+						{cart.cart.reduce((total, item) => {
+							return total + item.quantity;
+						}, 0)}{" "}
+						items
 					</span>
 				</Title>
 
 				<Items>
-					<CartItem currency={props.currency} overlay={true} />
-					<CartItem currency={props.currency} overlay={true} />
-					<CartItem currency={props.currency} overlay={true} />
+					{cart.cart.map((cartItem) => (
+						<CartItem
+							key={cartItem.id}
+							cart={cart}
+							cartItem={cartItem}
+							currency={currency}
+							overlay={true}
+						/>
+					))}
 				</Items>
 
 				<Title>
 					<strong>Total</strong>
-					<strong>$ 100.00</strong>
+					<strong>
+						{currency +
+							" " +
+							Number(
+								cart.cart.reduce((total, cartItem) => {
+									return total + cartItem.quantity * cartItem.price[currency];
+								}, 0)
+							).toFixed(2)}
+					</strong>
 				</Title>
+
 				<Buttons>
-					<Button
-						to="/cart"
-						color="white"
-						onClick={() => props.setCartOpen(false)}
-					>
+					<Button to="/cart" color="white" onClick={() => setCartOpen(false)}>
 						VIEW BAG
 					</Button>
 					<Button to="/checkout" color="#5ece7b">
@@ -48,8 +66,7 @@ const Background = styled.div`
 	left: 0;
 	bottom: 0;
 	right: 0;
-	z-index: 3;
-	/* opacity: 0.5; */
+	z-index: 10;
 	@media (max-width: 500px) {
 		top: 111px;
 	}
@@ -63,6 +80,7 @@ const Overlay = styled.div`
 	padding: 10px;
 	right: 30px;
 	max-width: 400px;
+	z-index: 7;
 	margin-left: 30px;
 	background-color: white;
 `;

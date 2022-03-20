@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { GET_PRODUCT } from "../queries";
 
-function Product({ currency, addItemToCart }) {
+function Product({ currency, cart }) {
 	let params = useParams();
 
 	const { loading, error, data } = useQuery(GET_PRODUCT, {
@@ -20,18 +20,31 @@ function Product({ currency, addItemToCart }) {
 		productId: "",
 		quantity: 1,
 		attributes: {},
+		price: {},
 	});
 
 	useEffect(() => {
 		if (!loading) {
 			let attributes = {};
+			let price = {};
 			for (let att of data.product.attributes) {
 				attributes = {
 					...attributes,
 					[att.id]: att.items[0].id,
 				};
 			}
-			setProduct({ productId: data.product.id, quantity: 1, attributes });
+			for (let p of data.product.prices) {
+				price = {
+					...price,
+					[p.currency.symbol]: p.amount,
+				};
+			}
+			setProduct({
+				productId: data.product.id,
+				quantity: 1,
+				attributes,
+				price,
+			});
 		}
 	}, [loading, data]);
 
@@ -46,7 +59,7 @@ function Product({ currency, addItemToCart }) {
 	};
 
 	let handleAddItem = () => {
-		addItemToCart(product);
+		cart.addItemToCart(product);
 		setPopup(true);
 		setTimeout(() => {
 			setPopup(false);
@@ -130,7 +143,9 @@ function Product({ currency, addItemToCart }) {
 					}`}</h2>
 				</Price>
 				<div style={{ position: "relative" }}>
-					<AddButton onClick={handleAddItem}>ADD TO CART</AddButton>
+					<AddButton onClick={handleAddItem} disabled={!data.product.inStock}>
+						{data.product.inStock ? "ADD TO CART" : "OUT OF STOCK"}
+					</AddButton>
 					<Popup $visible={popup}>
 						<FontAwesomeIcon style={{ padding: "10px" }} icon={faCheckCircle} />{" "}
 						Added to Cart
@@ -283,7 +298,7 @@ const AddButton = styled.button`
 	font-size: 1.1rem;
 	font-family: "Raleway", sans-serif;
 	color: white;
-	border: 0;
+	border: 2px solid #5ece7b;
 	display: flex;
 	position: relative;
 	flex-direction: column;
@@ -294,6 +309,9 @@ const AddButton = styled.button`
 	height: 52px;
 	&:hover {
 		background-color: #5ece5e;
+	}
+	&:disabled {
+		background-color: grey;
 	}
 `;
 
@@ -315,8 +333,8 @@ const Popup = styled.div`
 	width: 292px;
 	overflow: hidden;
 	height: ${(props) => (props.$visible ? "52px" : "0")};
-	border: 2px solid #5ece7b;
-	z-index: 6;
+	border: 1px solid #5ece7b;
+	z-index: 1;
 	background-color: white;
 	font-size: 1.1rem;
 	transition: all 0.5s ease-in-out;

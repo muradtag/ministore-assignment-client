@@ -2,11 +2,17 @@ import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { GET_PRODUCT } from "../queries";
 
-function CartItem({ currency, overlay }) {
+function CartItem({ currency, overlay, cartItem, cart }) {
 	const { loading, error, data } = useQuery(GET_PRODUCT, {
-		// variables: { id: "jacket-canada-goosee" },
-		variables: { id: "ps-5" },
+		variables: { id: cartItem.productId },
 	});
+
+	let handleIncrement = () => {
+		cart.addItemToCart(cartItem);
+	};
+	let handleDecrement = () => {
+		cart.removeItemFromCart(cartItem.id);
+	};
 
 	if (loading) return <Container>Loading...</Container>;
 	if (error) return <Container>Error...</Container>;
@@ -20,23 +26,27 @@ function CartItem({ currency, overlay }) {
 
 					<Brand>{data.product.brand}</Brand>
 
-					<Price>{`${currency} ${
+					<Price>{`${currency} ${(
 						data.product.prices.find(
 							(price) => price.currency.symbol === currency
-						).amount
-					}`}</Price>
+						).amount * cartItem.quantity
+					).toFixed(2)}`}</Price>
 
 					{data.product.attributes.map((att) => (
 						<Options key={att.id}>
 							{att.items.map((item) =>
 								att.type === "text" ? (
-									<Option key={item.id} color="white" $active={false}>
+									<Option
+										key={item.id}
+										color="white"
+										$active={cartItem.attributes[att.id] === item.id}
+									>
 										{item.value}
 									</Option>
 								) : (
 									<Option
 										key={item.id}
-										$active={false}
+										$active={cartItem.attributes[att.id] === item.id}
 										color={item.value}
 									></Option>
 								)
@@ -47,12 +57,20 @@ function CartItem({ currency, overlay }) {
 
 				<Right>
 					<Quantity>
-						<QuanButton $overlay={overlay} color="white">
-							-
-						</QuanButton>
-						<p>2</p>
-						<QuanButton $overlay={overlay} color="white">
+						<QuanButton
+							$overlay={overlay}
+							onClick={handleIncrement}
+							color="white"
+						>
 							+
+						</QuanButton>
+						<p>{cartItem.quantity}</p>
+						<QuanButton
+							$overlay={overlay}
+							onClick={handleDecrement}
+							color="white"
+						>
+							-
 						</QuanButton>
 					</Quantity>
 					<Image $overlay={overlay}>

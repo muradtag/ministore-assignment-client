@@ -1,14 +1,20 @@
 import styled from "styled-components";
 import CartItem from "./CartItem";
 
-function Cart(props) {
+function Cart({ currency, cart }) {
 	return (
 		<Container>
 			<Title>Cart</Title>
 			<List>
-				<CartItem overlay={false} currency={props.currency} />
-				<CartItem overlay={false} currency={props.currency} />
-				<CartItem overlay={false} currency={props.currency} />
+				{cart.cart.map((cartItem) => (
+					<CartItem
+						key={cartItem.id}
+						cartItem={cartItem}
+						cart={cart}
+						overlay={false}
+						currency={currency}
+					/>
+				))}
 			</List>
 		</Container>
 	);

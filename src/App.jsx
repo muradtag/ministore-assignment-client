@@ -13,24 +13,35 @@ function App() {
 
 	let addItemToCart = (item) => {
 		let updatedObject;
-
 		item = {
 			...item,
-			id: `${item.productId}?${
-				item.attributes.length ? Object.values(item.attributes).join("_") : ""
-			}`,
+			id: `${item.productId}?${Object.values(item.attributes).join("_")}`,
 		};
-
 		if (cart.find((cartItem) => cartItem.id === item.id)) {
 			updatedObject = cart.map((cartItem) => {
 				return cartItem.id === item.id
-					? { ...cartItem, quantity: cartItem.quantity++ }
-					: cartItem;
+					? { ...cartItem, quantity: ++cartItem.quantity }
+					: { ...cartItem };
 			});
+			setCart(updatedObject);
 		} else {
-			setCart([...cart, item]);
+			setCart((prevcart) => [...prevcart, item]);
 		}
 		console.log(cart);
+	};
+
+	const removeItemFromCart = (itemId) => {
+		let updatedObject;
+		if (cart.find((cartItem) => cartItem.id === itemId).quantity > 1) {
+			updatedObject = cart.map((cartItem) => {
+				return cartItem.id === itemId
+					? { ...cartItem, quantity: --cartItem.quantity }
+					: { ...cartItem };
+			});
+			setCart(updatedObject);
+		} else {
+			setCart(cart.filter((cartItem) => cartItem.id !== itemId));
+		}
 	};
 
 	return (
@@ -38,33 +49,31 @@ function App() {
 			<Header
 				currency={{ currency, setCurrency }}
 				category={{ category, setCategory }}
-				cart={{ cart, setCart }}
+				cart={{ cart, addItemToCart, removeItemFromCart }}
 			/>
 			<Container>
 				<Routes>
 					<Route
 						path={`/`}
-						element={
-							<Category
-								title={category}
-								currency={currency}
-								cart={{ cart, setCart }}
-							/>
-						}
+						element={<Category title={category} currency={currency} />}
 					/>
 					<Route
 						path={`/:productId`}
 						element={
 							<Product
-								cart={{ cart, setCart }}
-								addItemToCart={addItemToCart}
+								cart={{ cart, addItemToCart, removeItemFromCart }}
 								currency={currency}
 							/>
 						}
 					/>
 					<Route
 						path={`/cart`}
-						element={<Cart cart={{ cart, setCart }} currency={currency} />}
+						element={
+							<Cart
+								cart={{ cart, addItemToCart, removeItemFromCart }}
+								currency={currency}
+							/>
+						}
 					/>
 				</Routes>
 			</Container>
